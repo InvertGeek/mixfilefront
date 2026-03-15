@@ -1,7 +1,7 @@
 {
   "private": true,
   "type": "module",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -18,7 +18,7 @@
     "@mui/x-tree-view": "8.10.0",
     "animate.css": "4.1.1",
     "artplayer": "^5.2.5",
-    "axios": "1.11.0",
+    "axios": "1.13.5",
     "axios-retry": "4.5.0",
     "base-x": "5.0.1",
     "copy-to-clipboard": "3.3.3",
@@ -26,7 +26,7 @@
     "docx-preview": "^0.3.6",
     "fflate": "^0.8.2",
     "jscrypto": "^1.0.3",
-    "preact": "10.27.0",
+    "preact": "10.28.2",
     "react-file-drop": "3.1.6",
     "react-hot-toast": "2.6.0",
     "react-photo-view": "^1.2.7",
@@ -40,6 +40,6 @@
     "@preact/preset-vite": "2.10.2",
     "rollup-plugin-visualizer": "6.0.3",
     "sass-embedded": "1.77.8",
-    "vite": "7.1.10"
+    "vite": "7.1.11"
   }
 }

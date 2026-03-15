@@ -1,11 +1,12 @@
 import {Button} from "@mui/material";
 import {UploadFileCard} from "./UploadFileCard.jsx";
 import {notifyMsg, run} from "../../CommonUtils.jsx";
-import {dialogList} from "../../DialogContainer.jsx";
+import {addDialog, dialogList} from "../../DialogContainer.jsx";
 import {useSnapshot} from "valtio";
 import {showConfirmWindow} from "../../../components/common/base/ConfirmWindow.jsx";
 import {cancelAllUpload, isUploading, uploadFileList} from "./FileUpload.js";
 import {TransferDialog} from "../components/TransferDialog.jsx";
+import FileExportDialog from "../../../components/routes/home/components/dialog/FileExport.jsx";
 
 
 function UploadDialog() {
@@ -74,6 +75,31 @@ function UploadDialog() {
         return null
     })
 
+    const exportButton = run(() => {
+        if (uploaded > 1) {
+            return (
+                <Button variant={'contained'} onClick={() => {
+                    addDialog(
+                        <FileExportDialog
+                            fileList={
+                                results.map((it) => {
+                                    const {file: {name, size}, result: shareInfoData} = it
+                                    return {
+                                        name,
+                                        size,
+                                        shareInfoData
+                                    }
+                                })
+                            }
+                        />
+                    )
+                }}>
+                    导出文件列表
+                </Button>
+            )
+        }
+    })
+
 
     return (
         <TransferDialog className={'shadow'}>
@@ -89,6 +115,9 @@ function UploadDialog() {
             </div>
             {
                 cancelButton
+            }
+            {
+                exportButton
             }
 
             <Button variant={'outlined'} onClick={() => {
