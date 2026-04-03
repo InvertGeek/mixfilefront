@@ -23,12 +23,11 @@ function DragUpload(props) {
     return (
         <Container className={'shadow no-select'}>
             <UploadArea className={'upload-area'} callback={async (files) => {
-                console.log(files)
                 await sleep(100)
                 dialogList.pop()
                 addDialog(<UploadDialog/>)
                 addUploadFile(files, (file) => {
-                    return `${apiAddress}api${getRoutePath()}/${file.name}`
+                    return `${apiAddress}api${getRoutePath()}/${encodeURIComponent(file.name)}`
                 })
             }}/>
             <Button variant={'outlined'} onClick={() => {

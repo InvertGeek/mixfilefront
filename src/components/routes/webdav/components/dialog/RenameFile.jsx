@@ -46,7 +46,7 @@ function RenameFile({path, name}) {
                         notifyError('文件名称相同')
                         return
                     }
-                    await notifyPromise(moveFile(`api${path}/${name}`, `api${path}/${newName}`, overwrite), '重命名文件')
+                    await notifyPromise(moveFile(`api${path}/${encodeURIComponent(name)}`, `api${path}/${encodeURIComponent(newName)}`, overwrite), '重命名文件')
                     notifyMsg('重命名文件成功')
                     dialogList.pop()
                 }}>

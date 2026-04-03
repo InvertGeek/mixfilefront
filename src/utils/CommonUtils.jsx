@@ -50,7 +50,7 @@ export function notifyPromise(promise, msg, options) {
 }
 
 export function getRoutePath() {
-    return decodeURIComponent(window.location.hash.substring(1))
+    return window.location.hash.substring(1)
 }
 
 export async function sleep(ms) {
@@ -150,14 +150,6 @@ export function substringAfterLast(str, delimiter) {
     const index = str.lastIndexOf(delimiter);
     if (index === -1) return str; // 没找到分隔符就返回原字符串
     return str.substring(index + delimiter.length);
-}
-
-
-export function encodeUrlPath(path) {
-    return path
-        .split('/')
-        .map(segment => encodeURIComponent(segment))
-        .join('/');
 }
 
 export function getParentPath(path = getRoutePath()) {

@@ -80,7 +80,7 @@ const fabs = [
         async onClick() {
             const files = await selectFiles()
             addUploadFile(files, (file) => {
-                return `${apiAddress}api${getRoutePath()}/${file.name}`
+                return `${apiAddress}api${getRoutePath()}/${encodeURIComponent(file.name)}`
             })
         }
     },

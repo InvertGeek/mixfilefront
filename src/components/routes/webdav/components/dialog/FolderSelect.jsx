@@ -67,7 +67,7 @@ function FolderTreeItem({path}) {
             return (
                 folders.map(({name}) => {
 
-                    const folderPath = `${path}/${name}`
+                    const folderPath = `${path}/${encodeURIComponent(name)}`
 
                     return (
                         <TreeItem itemId={folderPath} label={name} key={folderPath}>
@@ -114,7 +114,7 @@ function FolderSelect({callback}) {
             </div>
             <div class="bottom">
                 <div class="tip no-select">
-                    已选择: {path || '根目录'}
+                    已选择: {decodeURIComponent(path) || '根目录'}
                 </div>
                 <FormControlLabel
                     className={'no-select'}

@@ -77,6 +77,9 @@ const Container = styled(Link)`
     }
 
     .file-date {
+        display: flex;
+        align-items: center;
+        padding: 0 5px;
         @media (max-width: 767px) {
             display: none;
         }

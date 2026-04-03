@@ -1,5 +1,5 @@
 import {apiAddress, client} from "../../../../config.js";
-import {encodeUrlPath, getRoutePath} from "../../../../utils/CommonUtils.jsx";
+import {getRoutePath} from "../../../../utils/CommonUtils.jsx";
 import {addDialog} from "../../../../utils/DialogContainer.jsx";
 import RenameFile from "../components/dialog/RenameFile.jsx";
 
@@ -23,7 +23,7 @@ export async function moveFile(path, destination, overwrite = false) {
         method: 'MOVE',
         url: path,
         headers: {
-            destination: apiAddress + encodeUrlPath(destination),
+            destination: apiAddress + destination,
             overwrite: overwrite ? 'T' : 'F',
         }
     })
@@ -34,7 +34,7 @@ export async function copyFile(path, destination, overwrite = false) {
         method: 'COPY',
         url: path,
         headers: {
-            destination: apiAddress + encodeUrlPath(destination),
+            destination: apiAddress + destination,
             overwrite: overwrite ? 'T' : 'F',
         }
     })
@@ -86,10 +86,10 @@ export function parsePropfindXML(xmlText) {
             lastModified,
             url,
             async copyFile({path, overwrite}) {
-                await copyFile(url, `api/webdav${path}/${name}`, overwrite)
+                await copyFile(url, `api/webdav${path}/${encodeURIComponent(name)}`, overwrite)
             },
             async moveFile({path, overwrite}) {
-                await moveFile(url, `api/webdav${path}/${name}`, overwrite)
+                await moveFile(url, `api/webdav${path}/${encodeURIComponent(name)}`, overwrite)
             },
             async deleteFile() {
                 await deleteFile(url)

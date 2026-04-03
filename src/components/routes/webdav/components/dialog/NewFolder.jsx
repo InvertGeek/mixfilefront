@@ -26,7 +26,7 @@ function NewFolder(props) {
                 variant={'contained'}
                 disabled={!folderName.trim()}
                 onClick={async () => {
-                    await createFolder(`api${path}/${folderName}`)
+                    await createFolder(`api${path}/${encodeURIComponent(folderName)}`)
                     notifyMsg('新建文件夹成功')
                     dialogList.pop()
                 }}
