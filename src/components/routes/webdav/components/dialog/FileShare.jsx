@@ -32,7 +32,7 @@ export async function shareSelectedFiles(name) {
 function FileShare(props) {
 
     const state = useProxyState({
-        name: substringAfterLast(getRoutePath(), '/'),
+        name: decodeURIComponent(substringAfterLast(getRoutePath(), '/')),
     })
 
     const {name} = state;

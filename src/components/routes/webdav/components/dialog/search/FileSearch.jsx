@@ -38,11 +38,11 @@ export async function searchFiles(name) {
             if (file.name.includes(name)) {
                 results.push({
                     ...file,
-                    path: `${path}/${file.name}`
+                    path: `${path}/${encodeURIComponent(file.name)}`
                 })
             }
             if (file.isFolder) {
-                searchFolder(file, `${path}/${file.name}`)
+                searchFolder(file, `${path}/${encodeURIComponent(file.name)}`)
             }
         }
     }
