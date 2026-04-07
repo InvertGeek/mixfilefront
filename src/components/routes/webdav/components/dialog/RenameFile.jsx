@@ -5,6 +5,7 @@ import {dialogList} from "../../../../../utils/DialogContainer.jsx";
 import {moveFile} from "../../utils/WebDavUtils.jsx";
 import useProxyState from "../../../../../hooks/useProxyState.js";
 import LoadingButton from "../../../../common/base/LoadingButton.jsx";
+import {useEffect, useId} from "react";
 
 function RenameFile({path, name}) {
 
@@ -13,7 +14,29 @@ function RenameFile({path, name}) {
         overwrite: false,
     })
 
+
+    const inputId = useId()
+
     const {newName, overwrite} = state;
+
+    useEffect(() => {
+        const input = document.querySelector(`#${inputId}`)
+        if (!input) {
+            return
+        }
+        input.focus();
+
+        const value = input.value;
+
+        const dotIndex = value.lastIndexOf('.');
+
+
+        if (dotIndex === -1) {
+            input.setSelectionRange(0, value.length);
+        } else {
+            input.setSelectionRange(0, dotIndex);
+        }
+    }, [])
 
 
     return (
@@ -21,6 +44,7 @@ function RenameFile({path, name}) {
             <h4 className={'no-select'}>重命名文件</h4>
             <div class="content">
                 <TextField
+                    id={inputId}
                     label={'文件名称'}
                     variant={'outlined'}
                     value={newName}
