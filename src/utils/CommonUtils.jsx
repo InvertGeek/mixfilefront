@@ -169,16 +169,6 @@ export function getParentPath(path = getRoutePath()) {
 }
 
 
-function extractNumber(str, start) {
-    let result = 0;
-    let i = start;
-    while (i < str.length && /\d/.test(str[i])) {
-        result = result * 10 + (str.charCodeAt(i) - 48);
-        i++;
-    }
-    return result;
-}
-
 export function deepEqual(a, b) {
     // 基本类型和引用类型直接比较
     if (a === b) return true;
@@ -199,21 +189,78 @@ export function deepEqual(a, b) {
     return aKeys.every(key => b.hasOwnProperty(key) && deepEqual(a[key], b[key]));
 }
 
+/**
+ * 优化后的 Windows 文件名自然排序算法
+ */
 export function compareByName(a, b) {
-    let i1 = 0, i2 = 0;
-    while (i1 < a.length && i2 < b.length) {
-        if (/\d/.test(a[i1]) && /\d/.test(b[i2])) {
-            const n1 = extractNumber(a, i1);
-            const n2 = extractNumber(b, i2);
-            i1 += n1.toString().length;
-            i2 += n2.toString().length;
-            if (n1 !== n2) return n1 - n2;
+    if (a === b) return 0;
+
+    const len1 = a.length;
+    const len2 = b.length;
+    let i = 0;
+    let j = 0;
+
+    while (i < len1 && j < len2) {
+        let c1 = a.charCodeAt(i);
+        let c2 = b.charCodeAt(j);
+
+        // 判断是否为数字 (0-9)
+        const isDig1 = c1 >= 48 && c1 <= 57;
+        const isDig2 = c2 >= 48 && c2 <= 57;
+
+        if (isDig1 && isDig2) {
+            let start1 = i;
+            let start2 = j;
+
+            // 跳过前导零，但保留最后一个零（如果是全零的情况）
+            while (i < len1 - 1 && a.charCodeAt(i) === 48) {
+                const next = a.charCodeAt(i + 1);
+                if (next < 48 || next > 57) break;
+                i++;
+            }
+            while (j < len2 - 1 && b.charCodeAt(j) === 48) {
+                const next = b.charCodeAt(j + 1);
+                if (next < 48 || next > 57) break;
+                j++;
+            }
+
+            let valStart1 = i;
+            let valStart2 = j;
+
+            while (i < len1 && (c1 = a.charCodeAt(i)) >= 48 && c1 <= 57) i++;
+            while (j < len2 && (c2 = b.charCodeAt(j)) >= 48 && c2 <= 57) j++;
+
+            const numLen1 = i - valStart1;
+            const numLen2 = j - valStart2;
+
+            // 长度不同，数值大的字符串肯定长
+            if (numLen1 !== numLen2) return numLen1 - numLen2;
+
+            // 长度相同，逐位比较
+            for (let k = 0; k < numLen1; k++) {
+                const diff = a.charCodeAt(valStart1 + k) - b.charCodeAt(valStart2 + k);
+                if (diff !== 0) return diff;
+            }
+
+            // 数值完全一样，比较含前导零的原始长度 (短的在前)
+            const fullLen1 = i - start1;
+            const fullLen2 = j - start2;
+            if (fullLen1 !== fullLen2) return fullLen1 - fullLen2;
+
         } else {
-            if (a[i1] !== b[i2]) return a[i1].charCodeAt(0) - b[i2].charCodeAt(0);
-            i1++;
-            i2++;
+            if (c1 !== c2) {
+                // 转小写比较 (仅限 A-Z)
+                const low1 = (c1 >= 65 && c1 <= 90) ? c1 + 32 : c1;
+                const low2 = (c2 >= 65 && c2 <= 90) ? c2 + 32 : c2;
+
+                if (low1 !== low2) return low1 - low2;
+                // 如果小写相同但原始码点不同（如 'a' vs 'A'），保持稳定排序
+                return c1 - c2;
+            }
+            i++;
+            j++;
         }
     }
-    return a.length - b.length;
-}
 
+    return len1 - len2;
+}
