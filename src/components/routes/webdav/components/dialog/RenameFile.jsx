@@ -49,7 +49,7 @@ function RenameFile({path, name}) {
                     variant={'outlined'}
                     value={newName}
                     onChange={(event) => {
-                        state.newName = event.target.value.trim()
+                        state.newName = event.target.value
                     }}/>
                 <FormControlLabel
                     className={'no-select'}
