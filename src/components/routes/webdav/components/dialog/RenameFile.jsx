@@ -14,23 +14,24 @@ function RenameFile({path, name}) {
         overwrite: false,
     })
 
-
+    // 1. 定义 ID
     const inputId = useId()
+    const buttonId = useId()
 
     const {newName, overwrite} = state;
 
     useEffect(() => {
-        const input = document.querySelector(`#${inputId}`)
+        // 使用 getElementById 配合你要求的格式
+        const input = document.getElementById(inputId)
         if (!input) {
             return
         }
         input.focus();
 
         const value = input.value;
-
         const dotIndex = value.lastIndexOf('.');
 
-
+        // 选中逻辑：只选中文件名部分，不选中后缀
         if (dotIndex === -1) {
             input.setSelectionRange(0, value.length);
         } else {
@@ -42,12 +43,18 @@ function RenameFile({path, name}) {
     return (
         <DialogDiv className={'shadow'}>
             <h4 className={'no-select'}>重命名文件</h4>
-            <div class="content">
+            <div className="content">
                 <TextField
-                    id={inputId}
+                    id={inputId} // 绑定输入框 ID
                     label={'文件名称'}
                     variant={'outlined'}
                     value={newName}
+                    onKeyDown={(e) => {
+                        // 2. 回车模拟点击按钮
+                        if (e.key === 'Enter') {
+                            document.getElementById(buttonId)?.click();
+                        }
+                    }}
                     onChange={(event) => {
                         state.newName = event.target.value
                     }}/>
@@ -55,6 +62,7 @@ function RenameFile({path, name}) {
                     className={'no-select'}
                     control={
                         <Checkbox
+                            checked={overwrite}
                             onChange={(event) => {
                                 state.overwrite = event.target.checked;
                             }}
@@ -64,6 +72,7 @@ function RenameFile({path, name}) {
                 />
             </div>
             <LoadingButton
+                id={buttonId} // 3. 绑定按钮 ID
                 variant={'contained'}
                 onClick={async () => {
                     if (name === newName) {

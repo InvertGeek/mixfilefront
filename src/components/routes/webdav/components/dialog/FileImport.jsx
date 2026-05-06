@@ -50,7 +50,7 @@ function FileImport({file}) {
         function importAllFiles() {
             showConfirmWindow('确定导入所有文件? (同名文件会覆盖)', async () => {
                 dialogList.pop()
-                await notifyPromise(importFiles(code))
+                await notifyPromise(importFiles(code), '导入文件')
                 notifyMsg('导入成功')
             })
         }

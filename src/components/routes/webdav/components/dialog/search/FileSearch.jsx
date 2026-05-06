@@ -61,7 +61,7 @@ function FileSearch(props) {
     async function doSearch() {
         state.searching = true
         try {
-            const results = await notifyPromise(searchFiles(name), '搜索中')
+            const results = await notifyPromise(searchFiles(name.trim()), '搜索中')
             addDialog(<SearchResult files={results}/>)
         } catch (error) {
             notifyError(`搜索失败,错误: ${error?.message}`)
@@ -84,7 +84,7 @@ function FileSearch(props) {
                     variant={'outlined'}
                     value={name}
                     onChange={(event) => {
-                        state.name = event.target.value.trim()
+                        state.name = event.target.value
                     }}/>
                 <p>将会在当前目录进行嵌套深度搜索</p>
                 <Button

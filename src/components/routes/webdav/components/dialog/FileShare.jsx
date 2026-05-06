@@ -14,6 +14,7 @@ import {apiAddress, client} from "../../../../../config.js";
 import {webDavState} from "../../state/WebDavState.js";
 import {downloadFileArchive} from "../../utils/WebDavUtils.jsx";
 import {resolveMixFile} from "../../../../common/base/FileResolve.jsx";
+import {useEffect, useId} from "react";
 
 export async function shareSelectedFiles(name) {
     const jsonData = await downloadFileArchive()
@@ -31,11 +32,18 @@ export async function shareSelectedFiles(name) {
 
 function FileShare(props) {
 
+    const buttonId = useId()
+    const inputId = useId()
+
     const state = useProxyState({
         name: decodeURIComponent(substringAfterLast(getRoutePath(), '/')),
     })
 
     const {name} = state;
+
+    useEffect(() => {
+        document.getElementById(inputId)?.focus();
+    }, [])
 
 
     return (
@@ -43,17 +51,24 @@ function FileShare(props) {
             <h4 className={'no-select'}>分享文件</h4>
             <div class="content">
                 <TextField
+                    id={inputId}
                     label={'分享名称'}
                     variant={'outlined'}
                     value={name}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            document.getElementById(buttonId)?.click();
+                        }
+                    }}
                     onChange={(event) => {
-                        state.name = event.target.value.trim()
+                        state.name = event.target.value
                     }}/>
             </div>
             <LoadingButton
+                id={buttonId}
                 variant={'contained'}
                 onClick={async () => {
-                    const code = await notifyPromise(shareSelectedFiles(name))
+                    const code = await notifyPromise(shareSelectedFiles(name.trim()), '分享文件')
                     dialogList.pop()
                     copyText(code)
                     resolveMixFile(code)
